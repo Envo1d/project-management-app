@@ -23,8 +23,8 @@ const bootstrap = async () => {
 	)
 
 	await fastify.listen({
-		host: '0.0.0.0',
-		port: 7000
+		host: fastify.config.HOST,
+		port: fastify.config.PORT
 	})
 }
 
