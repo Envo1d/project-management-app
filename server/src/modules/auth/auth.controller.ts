@@ -27,7 +27,7 @@ export default class UserController {
 			const { refreshToken, refreshTokenPayload, accessToken } =
 				await this.authService.createTokens(user.id)
 
-			rep
+			return rep
 				.code(201)
 				.setCookie('refreshToken', refreshToken, {
 					path: '/api/auth/refresh',
@@ -65,7 +65,7 @@ export default class UserController {
 					sameSite: 'none',
 					expires: new Date(refreshTokenPayload.exp * 1000)
 				})
-				.send({ accessToken: accessToken, user: user })
+				.send({ accessToken })
 		} catch (error) {
 			return rep.unauthorized('Email and/or password incorrect')
 		}
