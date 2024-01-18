@@ -17,7 +17,7 @@ export default async (fastify: FastifyInstance) => {
 				tags: ['Auth'],
 				body: $ref('createUserSchema'),
 				response: {
-					201: $ref('createUserResponseSchema')
+					201: $ref('registerResponseSchema')
 				}
 			}
 		},

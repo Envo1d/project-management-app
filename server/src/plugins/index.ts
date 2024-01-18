@@ -1,4 +1,3 @@
-import swagger from '@fastify/swagger'
 import { FastifyInstance } from 'fastify'
 import fastifyPlugin from 'fastify-plugin'
 import config from './config'
@@ -8,6 +7,7 @@ import drizzle from './drizzle'
 import jwt from './jwt'
 import redis from './redis'
 import sensible from './sensible'
+import swagger from './swagger'
 
 export default fastifyPlugin(async (fastify: FastifyInstance) => {
 	await Promise.all([fastify.register(config), fastify.register(sensible)])
