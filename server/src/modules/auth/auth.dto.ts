@@ -17,6 +17,10 @@ const loginSchema = z.object({
 		.min(8)
 })
 
+const registerResponseSchema = z.object({
+	accessToken: z.string()
+})
+
 const loginResponseSchema = z.object({
 	accessToken: z.string()
 })
@@ -33,6 +37,7 @@ export const { schemas: authSchemas, $ref } = buildJsonSchemas(
 	{
 		createUserSchema,
 		createUserResponseSchema,
+		registerResponseSchema,
 		loginSchema,
 		loginResponseSchema,
 		refreshResponseSchema,

@@ -10,7 +10,7 @@ export default fastifyPlugin(
 			openapi: {
 				info: {
 					title: 'API',
-					version: '1.0.0'
+					version: '0.1.0'
 				}
 			}
 		})
@@ -22,7 +22,20 @@ export default fastifyPlugin(
 				docExpansion: 'full',
 				deepLinking: false
 			},
-			staticCSP: true
+			uiHooks: {
+				onRequest: function (request, reply, next) {
+					next()
+				},
+				preHandler: function (request, reply, next) {
+					next()
+				}
+			},
+			staticCSP: true,
+			transformStaticCSP: header => header,
+			transformSpecification: (swaggerObject, request, reply) => {
+				return swaggerObject
+			},
+			transformSpecificationClone: true
 		})
 	},
 	{ dependencies: ['config'] }

@@ -26,7 +26,8 @@ export const usersRelations = relations(users, ({ many }) => ({
 	sessions: many(userSessions)
 }))
 
-export type User = typeof users.$inferSelect
+export type FullUser = typeof users.$inferSelect
+export type User = Pick<FullUser, 'id' | 'name' | 'avatarPath' | 'email'>
 export type CreateUserInput = typeof users.$inferInsert
 export type UserSession = typeof userSessions.$inferSelect
 export type CreateUserSession = typeof userSessions.$inferInsert

@@ -27,7 +27,7 @@ export default class UserController {
 			const { refreshToken, refreshTokenPayload, accessToken } =
 				await this.authService.createTokens(user.id)
 
-			return rep
+			rep
 				.code(201)
 				.setCookie('refreshToken', refreshToken, {
 					path: '/api/auth/refresh',
@@ -36,7 +36,7 @@ export default class UserController {
 					sameSite: 'none',
 					expires: new Date(refreshTokenPayload.exp * 1000)
 				})
-				.send({ accessToken: accessToken, user: user })
+				.send({ accessToken })
 		} catch (error) {
 			if (error instanceof Error) return rep.badRequest(error.message)
 			throw error
@@ -48,7 +48,7 @@ export default class UserController {
 		rep: FastifyReply
 	) {
 		try {
-			const user = await this.userService.getUserByEmail(req.body.email)
+			const user = await this.userService.getUserPasswordByEmail(req.body.email)
 
 			if (!this.authService.verifyPassword(user.password, req.body.password))
 				throw new Error('Incorrect password')
