@@ -19,6 +19,7 @@
 		"@fastify/cors": "^8.5.0",
 		"@fastify/env": "^4.3.0",
 		"@fastify/jwt": "^8.0.0",
+		"@fastify/multipart": "^8.1.0",
 		"@fastify/sensible": "^5.5.0",
 		"@fastify/swagger": "^8.13.0",
 		"@fastify/swagger-ui": "^2.0.1",
