@@ -2,6 +2,7 @@ import { FastifyInstance, FastifyPluginOptions } from 'fastify'
 
 import fastifyPlugin from 'fastify-plugin'
 import auth from './auth'
+import file from './file'
 
 const getOptionsWithPrefix = (
 	options: FastifyPluginOptions,
@@ -20,7 +21,8 @@ export default fastifyPlugin(
 		})
 
 		await Promise.all([
-			fastify.register(auth, getOptionsWithPrefix(options, '/auth'))
+			fastify.register(auth, getOptionsWithPrefix(options, '/auth')),
+			fastify.register(file, getOptionsWithPrefix(options, '/file'))
 		])
 	}
 )
