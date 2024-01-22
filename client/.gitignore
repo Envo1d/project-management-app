@@ -5,6 +5,7 @@
 .nitro
 .cache
 dist
+client-tests
 
 # Node dependencies
 node_modules
