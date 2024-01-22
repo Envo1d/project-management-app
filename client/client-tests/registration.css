@@ -1,0 +1,22 @@
+* {
+    margin: 0%;
+    padding: 0%;
+}
+
+body {
+    background-color: rgb(44, 14, 71);
+}
+
+.di {
+    background-color: rgb(146, 96, 189);
+    margin-left: 40%;
+    margin-top: 20%;
+    width: 450px;
+    height: 450px;
+    text-align: center;
+    line-height: 50px;
+}
+
+.reg {
+    color: red;
+}

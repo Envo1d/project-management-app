@@ -1,0 +1,22 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    background-color: black;
+}
+
+.block {
+    display: inline-block;
+    background-color: blueviolet;
+    width: 15%;
+    padding: 15px;
+    text-align: center;
+    margin-left: 40%;
+    margin-top: 20%;
+}
+
+.block>p {
+    padding: 10px;
+}
