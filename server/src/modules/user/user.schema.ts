@@ -31,5 +31,3 @@ export type User = Pick<FullUser, 'id' | 'name' | 'avatarPath' | 'email'>
 export type CreateUserInput = typeof users.$inferInsert
 export type UserSession = typeof userSessions.$inferSelect
 export type CreateUserSession = typeof userSessions.$inferInsert
-
-//TODO: add drizzle-zod functionality
