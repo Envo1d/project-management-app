@@ -1,6 +1,6 @@
+import { User } from '@prisma/client'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { CreateUserInput } from '../user/user.dto'
-import { User } from '../user/user.schema'
 import UserService from '../user/user.service'
 import { LoginInput } from './auth.dto'
 import AuthService from './auth.service'
@@ -50,7 +50,9 @@ export default class UserController {
 		try {
 			const user = await this.userService.getUserPasswordByEmail(req.body.email)
 
-			if (!this.authService.verifyPassword(user.password, req.body.password))
+			if (
+				!this.authService.verifyPassword(user.passwordHash, req.body.password)
+			)
 				throw new Error('Incorrect password')
 
 			const { refreshToken, refreshTokenPayload, accessToken } =

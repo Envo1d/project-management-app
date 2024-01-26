@@ -22,6 +22,7 @@ declare module 'fastify' {
 			POSTGRES_PASSWORD: string
 			POSTGRES_PORT: number
 			POSTGRES_HOST: string
+			DATABASE_URL: string
 			REDIS_HOST: string
 			REDIS_PORT: number
 			REDIS_PASSWORD: string
@@ -50,7 +51,8 @@ export default fastifyPlugin(
 				'POSTGRES_HOST',
 				'REDIS_HOST',
 				'REDIS_PORT',
-				'REDIS_PASSWORD'
+				'REDIS_PASSWORD',
+				'DATABASE_URL'
 			],
 			properties: {
 				SECRET: {
@@ -88,6 +90,9 @@ export default fastifyPlugin(
 				},
 				POSTGRES_PORT: {
 					type: 'number'
+				},
+				DATABASE_URL: {
+					type: 'string'
 				},
 				REDIS_HOST: {
 					type: 'string'

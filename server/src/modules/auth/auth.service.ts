@@ -1,10 +1,8 @@
 import { verify } from 'argon2'
-import { and, eq } from 'drizzle-orm'
 import { v4 } from 'uuid'
-import { db } from '../../plugins/drizzle'
 import { accessTokenPayload, jwt, refreshTokenPayload } from '../../plugins/jwt'
+import { prisma } from '../../plugins/prisma'
 import TimeUtil from '../../utils/time'
-import { userSessions } from '../user/user.schema'
 
 export default class AuthService {
 	public async verifyPassword(
@@ -45,10 +43,12 @@ export default class AuthService {
 			tokenFamily: tokenFamily
 		})
 
-		await db.insert(userSessions).values({
-			refreshToken,
-			tokenFamily,
-			userId
+		await prisma.userSession.create({
+			data: {
+				refreshToken,
+				tokenFamily,
+				userId
+			}
 		})
 
 		return {
@@ -70,12 +70,14 @@ export default class AuthService {
 			tokenFamily: oldTokenObject.tokenFamily
 		})
 
-		await db
-			.update(userSessions)
-			.set({
-				refreshToken
-			})
-			.where(eq(userSessions.refreshToken, oldRefreshToken))
+		await prisma.userSession.update({
+			where: {
+				tokenFamily: oldTokenObject.tokenFamily
+			},
+			data: {
+				refreshToken: refreshToken
+			}
+		})
 
 		return {
 			refreshToken,
@@ -113,24 +115,28 @@ export default class AuthService {
 		const refreshTokenObject = jwt.decodeRefreshToken(oldRefreshToken)
 
 		if (refreshTokenObject.aex < TimeUtil.getNowUnixTimeStamp()) {
-			await db
-				.delete(userSessions)
-				.where(eq(userSessions.tokenFamily, refreshTokenObject.tokenFamily))
+			await prisma.userSession.delete({
+				where: {
+					tokenFamily: refreshTokenObject.tokenFamily
+				}
+			})
 
 			throw new Error('Refresh token has reached absolute expiry')
 		}
 
-		const userSession = await db.query.userSessions.findFirst({
-			where: and(
-				eq(userSessions.refreshToken, oldRefreshToken),
-				eq(userSessions.userId, refreshTokenObject.sub)
-			)
+		const userSession = await prisma.userSession.findFirst({
+			where: {
+				refreshToken: oldRefreshToken,
+				userId: refreshTokenObject.sub
+			}
 		})
 
 		if (!userSession) {
-			await db
-				.delete(userSessions)
-				.where(eq(userSessions.tokenFamily, refreshTokenObject.tokenFamily))
+			await prisma.userSession.delete({
+				where: {
+					tokenFamily: refreshTokenObject.tokenFamily
+				}
+			})
 
 			throw new Error('Refresh token has already been used')
 		}
@@ -151,8 +157,10 @@ export default class AuthService {
 	public async deleteUserSessionByTokenFamily(
 		tokenFamily: string
 	): Promise<void> {
-		await db
-			.delete(userSessions)
-			.where(eq(userSessions.tokenFamily, tokenFamily))
+		await prisma.userSession.deleteMany({
+			where: {
+				tokenFamily: tokenFamily
+			}
+		})
 	}
 }
