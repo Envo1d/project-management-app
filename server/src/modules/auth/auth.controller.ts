@@ -1,12 +1,8 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { CreateUserInput } from '../user/user.dto'
-import { User } from '../user/user.schema'
 import UserService from '../user/user.service'
 import { LoginInput } from './auth.dto'
 import AuthService from './auth.service'
-
-const CACHE_TTL = 1800
-const CACHE_KEY_USER = 'user'
 
 export default class UserController {
 	private authService: AuthService
@@ -50,7 +46,9 @@ export default class UserController {
 		try {
 			const user = await this.userService.getUserPasswordByEmail(req.body.email)
 
-			if (!this.authService.verifyPassword(user.password, req.body.password))
+			if (
+				!this.authService.verifyPassword(user.passwordHash, req.body.password)
+			)
 				throw new Error('Incorrect password')
 
 			const { refreshToken, refreshTokenPayload, accessToken } =
@@ -107,20 +105,5 @@ export default class UserController {
 				sameSite: 'none'
 			})
 			.send()
-	}
-
-	public async userHandler(req: FastifyRequest, rep: FastifyReply) {
-		try {
-			const user = await req.redis.rememberJSON<User>(
-				CACHE_KEY_USER + req.user.sub,
-				CACHE_TTL,
-				async () => {
-					return await this.userService.getUserById(req.user.sub)
-				}
-			)
-			return rep.code(200).send(user)
-		} catch (e) {
-			return rep.unauthorized()
-		}
 	}
 }

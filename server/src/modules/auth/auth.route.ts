@@ -15,7 +15,7 @@ export default async (fastify: FastifyInstance) => {
 		{
 			schema: {
 				tags: ['Auth'],
-				body: $ref('createUserSchema'),
+				body: $ref('registerSchema'),
 				response: {
 					201: $ref('registerResponseSchema')
 				}
@@ -64,22 +64,5 @@ export default async (fastify: FastifyInstance) => {
 			onRequest: [fastify.authenticate]
 		},
 		authController.logoutHandler.bind(authController)
-	)
-
-	fastify.get(
-		'/user',
-		{
-			schema: {
-				headers: {
-					Authorization: true
-				},
-				tags: ['Auth'],
-				response: {
-					200: $ref('userResponseSchema')
-				}
-			},
-			onRequest: [fastify.authenticate]
-		},
-		authController.userHandler.bind(authController)
 	)
 }
