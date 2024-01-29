@@ -1,7 +1,7 @@
 import { User } from '@prisma/client'
 import { hash } from 'argon2'
 import { prisma } from '../../plugins/prisma'
-import { CreateUserInput } from './user.dto'
+import { CreateUserInput, UpdateUserInput } from './user.dto'
 
 export default class UserService {
 	public async createUser(input: CreateUserInput): Promise<User> {
@@ -72,5 +72,28 @@ export default class UserService {
 		}
 
 		return user
+	}
+
+	public async updateUser(id: string, input: UpdateUserInput): Promise<User> {
+		const res = await prisma.user.update({
+			where: {
+				id
+			},
+			data: {
+				name: input.name,
+				email: input.email
+			}
+		})
+		if (!res) throw Error('User not found')
+
+		return res
+	}
+
+	public async deleteUser(id: string): Promise<boolean> {
+		const res = await prisma.user.delete({ where: { id } })
+
+		if (!res) throw Error('User not found')
+
+		return true
 	}
 }
